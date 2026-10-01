@@ -1,66 +1,144 @@
-# DAQ Suite — Intelligent DAQ Configuration, Simulation and Code Generation
+# DAQ Suite — Intelligent Data Acquisition Configuration & Code Generation
 
-Short description
-This project simplifies configuring, generating code for, and simulating Data Acquisition (DAQ) systems. It provides an interactive GUI, live simulation and visualization, adaptive semantic validation, and automatic code generation for multiple DAQ platforms.
+A Python-based data acquisition toolkit for configuring devices, simulating live signals, and generating device-specific code for acquisition workflows.
 
-Highlights
-- GUI (Tkinter) for interactive configuration and device selection
-- Live simulation and visualization (time domain and FFT) using Matplotlib
-- Configuration save/load in JSON format
-- Automatic code generation for:
-  - NI-DAQmx (C/C++)
-  - Serial/COM (Python using pyserial)
-- Standalone .exe built with PyInstaller for Windows (Python not required)
-- Graceful degradation when NI-DAQmx is not available (Simulation-only / Serial mode)
+## Overview
 
-Repository
-https://github.com/Saidmurotov/dissertatsiya
+**DAQ Suite** helps users discover connected DAQ hardware, validate acquisition parameters, and generate code for multiple target systems. It is designed for research, development, and embedded-system prototyping, especially when hardware availability varies across environments.
 
-Quick start
-1. Install (development environment):
-   - Python 3.11.9 (recommended for compatibility with nidaqmx and PyInstaller)
-   - pip install -r requirements.txt
+This project addresses a practical problem: configuring DAQ systems manually is time-consuming and error-prone. The app centralizes device discovery, channel validation, simulation, and code generation into a single workflow.
 
-2. Run GUI:
-   - python gui.py
+## Features
 
-3. Use the GUI to:
-   - Detect connected devices (NI-DAQmx and serial ports)
-   - Configure channels, sample rates, and acquisition parameters
-   - Simulate acquisition and view live plots (time-domain and FFT)
-   - Generate code for selected target (NI-DAQmx C/C++ or Python for microcontrollers)
+- Interactive **Tkinter GUI** for DAQ configuration
+- Device discovery for **NI-DAQmx** and **serial/COM devices**
+- Live **time-domain** and **FFT signal visualization**
+- **JSON configuration save/load**
+- Automatic code generation for different target types
+- Simulation mode when hardware is unavailable
+- Windows executable packaging support via **PyInstaller**
 
-Standalone executable
-A released Windows executable (.exe) has been built using PyInstaller targeting Python 3.11.9 to avoid metadata/packaging issues with nidaqmx. See the Releases section of the repository for download.
+## Tech Stack
 
-Technical requirements
-- Python >= 3.11.9
-- Key dependencies (see requirements.txt):
-  - numpy
-  - matplotlib
-  - pyserial
-  - nidaqmx (optional; if not present, the app runs in Simulation/Serial mode)
+| Technology | Purpose |
+|---|---|
+| Python 3.11+ | Application runtime |
+| Tkinter | Desktop GUI |
+| NumPy | Signal processing |
+| Matplotlib | Plotting and visualization |
+| pyserial | Serial port communication |
+| nidaqmx | NI hardware support |
+| PyInstaller | Windows packaging |
+| pytest | Testing |
 
-Files of interest
-- gui.py — main GUI, simulation and interaction logic
-- daq_config.py — DAQ settings model and validation
-- code_generator.py — code generation for NI-DAQmx and Serial targets
-- device_inspector.py — device discovery (NI-DAQmx, COM ports)
-- DAQ_Suite.spec — PyInstaller spec for building the executable
-- requirements.txt, .gitignore
+## Architecture
 
-Known limitations & compatibility
-- Built and tested with Python 3.11.9 due to compatibility constraints with nidaqmx and PyInstaller.
-- If NI-DAQmx driver or python package is missing, NI features are disabled and the app will offer Simulation or Serial-only usage.
+```mermaid
+graph TD
+    A[User] --> B[GUI Application]
+    B --> C[Device Inspector]
+    C --> D[NI-DAQmx / Serial Devices]
+    B --> E[DAQ Config Model]
+    E --> F[Signal Simulation]
+    E --> G[Code Generator]
+    G --> H[Generated Acquisition Script]
+    E --> I[JSON Save/Load]
+```
 
-Future improvements
-- Add support for LabJack and PyVISA backends
-- Extend signal processing (digital filters, RMS, triggering)
-- Add a Data Viewer tab for CSV analysis and a plugin architecture
-- Improve diagnostics, suggestion messages, and traceability of validation decisions
+## Project Structure
 
-License
-Choose and include an appropriate license file (e.g., MIT) in the repository.
+```text
+DAQ_systems/
+├── gui.py                 # Main desktop GUI
+├── main.py                # CLI entry point
+├── daq_config.py          # Parameter validation and config model
+├── device_inspector.py    # Hardware detection and capability scanning
+├── code_generator.py      # Target-specific code generation
+├── requirements.txt       # Python dependencies
+├── .gitignore             # Ignore generated/runtime files
+├── README.md              # Project documentation
+├── src/                   # Extended project modules
+└── tests/                 # Automated tests (if present)
+```
 
-Contact / Contributions
-See CONTRIBUTING.md for contribution guidelines. For questions, open an issue in the GitHub repository.
+## Requirements
+
+- Python 3.11.9 or newer
+- NI-DAQmx drivers for real hardware access (optional)
+- Serial device access for COM-based acquisition
+
+## Installation
+
+```bash
+git clone https://github.com/Saidmurotov/DAQ_systems.git
+cd DAQ_systems
+python -m venv venv
+source venv/bin/activate   # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+```
+
+## Running the Project
+
+### GUI mode
+
+```bash
+python gui.py
+```
+
+### CLI mode
+
+```bash
+python main.py
+```
+
+## Configuration
+
+The application stores user settings as JSON and supports device-specific validation. There are no secret credentials in the project source; if hardware-specific credentials are ever required, keep them in a local environment file and do not commit them.
+
+## Usage
+
+1. Select a device type: NI-DAQmx, Serial, or Simulation Only.
+2. Scan for connected devices.
+3. Set sample rate and channel values.
+4. Start live simulation or generate hardware code.
+5. Save configuration or script output.
+
+## Testing
+
+```bash
+pytest
+```
+
+## Deployment
+
+A Windows executable can be built with PyInstaller:
+
+```bash
+pip install pyinstaller
+pyinstaller DAQ_Suite.spec
+```
+
+## Troubleshooting
+
+- If NI devices are not detected, confirm the drivers are installed.
+- If serial ports are missing, check the device manager and user permissions.
+- If import errors appear, reinstall dependencies from `requirements.txt`.
+
+## Future Improvements
+
+- Add LabJack / PyVISA support
+- Add advanced digital filtering and triggering
+- Add richer device-specific code generation targets
+- Improve packaging and deployment scripts
+
+## Contributing
+
+Pull requests are welcome. Keep changes focused and verify hardware-related behavior before merging.
+
+## License
+
+No explicit license file is present in the repository yet.
+
+## Author
+
+Saidmurotov
